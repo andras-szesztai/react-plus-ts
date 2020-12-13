@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const MiniCSSExtractPlugin = require("mini-css-extract-plugin")
 
 module.exports = {
   entry: "./src/index.tsx",
@@ -11,7 +12,14 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: "babel-loader",
-        exclude: /node_modules/
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: [
+          MiniCSSExtractPlugin.loader,
+          { loader: "css-loader", options: { modules: true } },
+        ],
       },
     ],
   },
@@ -20,5 +28,6 @@ module.exports = {
       template: "./src/index.html",
       filename: "index.html",
     }),
+    new MiniCSSExtractPlugin(),
   ],
 }
