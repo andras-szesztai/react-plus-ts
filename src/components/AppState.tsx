@@ -1,8 +1,14 @@
-import React, { createContext, useState, useContext } from "react"
+import React, { createContext, useReducer, useContext } from "react"
 
+interface CartItem {
+  name: string
+  price: number
+  id: number
+  quantity: number
+}
 interface AppStateValue {
   cart: {
-    items: { name: string; price: number; id: number; quantity: number }[]
+    items: CartItem[]
   }
 }
 
@@ -14,12 +20,44 @@ const defaultStateValue: AppStateValue = {
 
 export const AppStateContext = createContext(defaultStateValue)
 
-export const AppSetStateContext = createContext<
-  React.Dispatch<React.SetStateAction<AppStateValue>> | undefined
+export const AppDispatchContext = createContext<
+  React.Dispatch<AddToCartAction> | undefined
 >(undefined)
 
-export const useSetState = () => {
-  const setState = useContext(AppSetStateContext)
+interface Action<T> {
+  type: T
+}
+
+interface AddToCartAction extends Action<"ADD_TO_CART"> {
+  payload: {
+    item: Omit<CartItem, "quantity">
+  }
+}
+
+const reducer = (state: AppStateValue, action: AddToCartAction) => {
+  if (action.type === "ADD_TO_CART") {
+    const itemToAdd = action.payload.item
+    const itemExists = state.cart.items.find((item) => item.id === itemToAdd.id)
+    return {
+      ...state,
+      cart: {
+        ...state.cart,
+        items: itemExists
+          ? state.cart.items.map((item) => {
+              if (item.id === itemToAdd.id) {
+                return { ...item, quantity: item.quantity + 1 }
+              }
+              return item
+            })
+          : [...state.cart.items, { ...itemToAdd, quantity: 1 }],
+      },
+    }
+  }
+  return state
+}
+
+export const useStateDispatch = () => {
+  const setState = useContext(AppDispatchContext)
   if (!setState) {
     throw new Error("useSetState was called outside of the AppSetStateContet")
   }
@@ -27,12 +65,12 @@ export const useSetState = () => {
 }
 
 const AppStateProvider: React.FC = ({ children }) => {
-  const [state, setState] = useState(defaultStateValue)
+  const [state, dispatch] = useReducer(reducer, defaultStateValue)
   return (
     <AppStateContext.Provider value={state}>
-      <AppSetStateContext.Provider value={setState}>
+      <AppDispatchContext.Provider value={dispatch}>
         {children}
-      </AppSetStateContext.Provider>
+      </AppDispatchContext.Provider>
     </AppStateContext.Provider>
   )
 }
