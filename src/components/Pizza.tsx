@@ -1,10 +1,10 @@
 import React from "react"
 
-import { useStateDispatch } from "./AppState"
+import withAddToCart, { AddToCartProps } from "./AddToCart"
+
 import { Pizza } from "../types"
 
 import PizzaCSS from "./Pizza.module.css"
-import withAddToCart, { AddToCartProps } from "./AddToCart"
 
 interface Props extends AddToCartProps {
   pizza: Pizza
