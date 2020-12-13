@@ -1,15 +1,14 @@
 import React from "react"
-
-import { useStateDispatch } from "./AppState"
 import { Pizza } from "../types"
+import { useStateDispatch } from "./AppState"
 
-import PizzaCSS from "./Pizza.module.css"
+import OfferCSS from "./SpecialOffer.module.css"
 
 interface Props {
   pizza: Pizza
 }
 
-const PizzaComponent: React.FC<Props> = ({ pizza }) => {
+const SpecialOffer: React.FC<Props> = ({ pizza }) => {
   const dispatch = useStateDispatch()
   const handleAddToCartClick = () => {
     dispatch({
@@ -20,15 +19,15 @@ const PizzaComponent: React.FC<Props> = ({ pizza }) => {
     })
   }
   return (
-    <li className={PizzaCSS.container}>
+    <div className={OfferCSS.container}>
       <h2>{pizza.name}</h2>
       <p>{pizza.description}</p>
       <p>{pizza.price}</p>
       <button type="button" onClick={handleAddToCartClick}>
         Add to cart
       </button>
-    </li>
+    </div>
   )
 }
 
-export default PizzaComponent
+export default SpecialOffer

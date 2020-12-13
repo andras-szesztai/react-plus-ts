@@ -8,8 +8,10 @@ import Cart from "./Cart"
 import pizzas from "../data/pizzas.json"
 
 import AppCSS from "./App.module.css"
+import SpecialOffer from "./SpecialOffer"
 
 const App = () => {
+  const specialOffer = pizzas.find((pizza) => pizza.specialOffer)
   return (
     <AppStateProvider>
       <div className={AppCSS.container}>
@@ -18,7 +20,8 @@ const App = () => {
           <div className={AppCSS.siteTitle}>Delicious Pizza</div>
           <Cart />
         </div>
-        <ul>
+        {specialOffer && <SpecialOffer pizza={specialOffer} />}
+        <ul className={AppCSS.pizzaList}>
           {pizzas.map((pizza) => {
             return <Pizza key={pizza.id} pizza={pizza} />
           })}
