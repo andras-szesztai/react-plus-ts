@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 
 import PizzaSvg from "../svg/pizza.svg"
 import AppStateProvider from "./AppState"
